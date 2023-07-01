@@ -15,10 +15,10 @@ def p_ucb1(arms: List[List[float]], num_rounds: int) -> List[int]:
         for a in range(num_arms):
             for d in range(num_objectives):
                 if num_pulls[a] != 0:
-                    upper_bounds[a][d] = rewards_list[a][d] + exploration_bonus(t, num_objectives, num_pulls[a])
+                    upper_bounds[a][d] = rewards_list[a][d] + exploration_bonus(t, num_objectives, num_arms, num_pulls[a])
 
-            # print("Upper bounds:")
-            # print(upper_bounds)
+            #print("Upper bounds:")
+            #print(upper_bounds)
 
             update_candidate_set(a, num_objectives, candidate_set, upper_bounds)
 
@@ -55,12 +55,12 @@ def update_candidate_set(arm, num_objectives, candidate_set, upper_bounds):
     candidate_set.append(arm)
 
 
-def exploration_bonus(num_iterations, num_objectives, num_selected):
-    return np.sqrt((2 * np.log(num_iterations) * np.power(num_objectives, 1 / 4)) / num_selected)
+def exploration_bonus(num_iterations, num_objectives, num_arms, num_selected):
+    return np.sqrt((2 * np.log(num_iterations) * np.power(num_objectives * num_arms, 1 / 4)) / num_selected)
 
 
 # Test
 arms = [[0, 0], [0.8, 0.2], [0.8, 0.1], [0.5, 0.7], [0.4, 0.6], [0.6, 0.4], [0.3, 0.6]]
-num_rounds = 10000
+num_rounds = 100000
 c_set = p_ucb1(arms, num_rounds)
 print("Candidate set:", c_set)
